@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Tablas de Multiplicar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .bounce {
+            animation: bounce 0.5s ease;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body class="bg-blue-300 flex flex-col items-center justify-center min-h-screen text-center">
+    <div class="bg-white p-6 rounded-2xl shadow-xl max-w-md w-full text-lg">
+        <h1 class="text-2xl font-bold text-blue-600">¡Practica las Tablas de Multiplicar!</h1>
+        <p class="mt-2">Resuelve la multiplicación:</p>
+        <div class="text-3xl font-bold my-4" id="question"></div>
+        <input type="number" id="answer" class="border p-2 text-center w-24 text-xl rounded-lg shadow-md">
+        <button onclick="checkAnswer()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg mt-3">Comprobar</button>
+        <p id="feedback" class="mt-3 text-xl font-semibold"></p>
+        <p class="mt-3 text-lg">Puntuación: <span id="score" class="font-bold">0</span></p>
+        <button onclick="resetGame()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg mt-4">Reiniciar</button>
+    </div>
+    
+    <audio id="correctSound" src="https://www.fesliyanstudios.com/play-mp3/4382"></audio>
+    <audio id="wrongSound" src="https://www.fesliyanstudios.com/play-mp3/4383"></audio>
+    
+    <script>
+        let num1, num2, score = 0;
+        function generateQuestion() {
+            num1 = Math.floor(Math.random() * 9) + 1;
+            num2 = Math.floor(Math.random() * 9) + 1;
+            document.getElementById("question").textContent = `${num1} × ${num2} = ?`;
+            document.getElementById("answer").value = "";
+            document.getElementById("feedback").textContent = "";
+        }
+        function checkAnswer() {
+            const answer = parseInt(document.getElementById("answer").value);
+            const feedback = document.getElementById("feedback");
+            if (answer === num1 * num2) {
+                feedback.textContent = "¡Correcto! 🎉";
+                feedback.className = "text-green-600 font-bold bounce";
+                document.getElementById("correctSound").play();
+                score++;
+            } else {
+                feedback.textContent = "Inténtalo de nuevo 😕";
+                feedback.className = "text-red-600 font-bold bounce";
+                document.getElementById("wrongSound").play();
+                score = Math.max(0, score - 1);
+            }
+            document.getElementById("score").textContent = score;
+            setTimeout(generateQuestion, 1000);
+        }
+        function resetGame() {
+            score = 0;
+            document.getElementById("score").textContent = score;
+            generateQuestion();
+        }
+        generateQuestion();
+    </script>
+</body>
+</html>
